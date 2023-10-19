@@ -5,12 +5,14 @@ const core = mach.core;
 const gpu = mach.gpu;
 const math = mach.math;
 const vec2 = math.vec2;
+const vec3 = math.vec3;
+const Mat4x4 = math.Mat4x4;
 
 pub const name = .guecs;
 
 const Self = @This();
 
-triangle: mach.ecs.EntityID,
+rect: mach.ecs.EntityID,
 
 pub const Pipeline = enum(u32) {
     default,
@@ -25,11 +27,12 @@ pub fn init(
 
     try gui_mod.send(.init, .{});
 
-    const triangle = try engine.newEntity();
-    try gui_mod.set(triangle, .position, vec2(0, 0));
+    const rect = try engine.newEntity();
+    try gui_mod.set(rect, .transform, Mat4x4.translate(vec3(0, 0, 0)));
+    try gui_mod.set(rect, .size, vec2(150, 100));
 
     guecs.state = .{
-        .triangle = triangle,
+        .rect = rect,
     };
 }
 
@@ -58,6 +61,8 @@ pub fn tick(
     }
 
     // Render a frame
+    try gui_mod.send(.preRender, .{});
+
     const clear_color = gpu.Color{ .r = 0.0, .g = 0.0, .b = 0.0, .a = 0.0 };
     try engine.send(.beginPass, .{clear_color});
     try gui_mod.send(.render, .{});

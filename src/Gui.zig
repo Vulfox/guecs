@@ -120,14 +120,16 @@ pub fn deinit(gui_mod: *mach.Mod(.gui)) !void {
 
 pub fn guiPreRender(gui_mod: *mach.Mod(.gui), engine: *mach.Mod(.engine)) !void {
     // Update uniform buffer
+    // Set 0,0 to top-left
     const ortho = Mat4x4.ortho(
-        -@as(f32, @floatFromInt(core.size().width)) / 2,
-        @as(f32, @floatFromInt(core.size().width)) / 2,
-        -@as(f32, @floatFromInt(core.size().height)) / 2,
-        @as(f32, @floatFromInt(core.size().height)) / 2,
+        0,
+        @as(f32, @floatFromInt(core.size().width)),
+        @as(f32, @floatFromInt(core.size().height)),
+        0,
         -0.1,
         100000,
     );
+
     const uniforms = Uniforms{
         .view_projection = ortho,
     };

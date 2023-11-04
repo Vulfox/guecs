@@ -28,7 +28,7 @@ pub fn init(
     try gui_mod.send(.init, .{});
 
     const rect = try engine.newEntity();
-    try gui_mod.set(rect, .transform, Mat4x4.translate(vec3(0, 0, 0)));
+    try gui_mod.set(rect, .transform, Mat4x4.translate(vec3(100, 100, 0)));
     try gui_mod.set(rect, .size, vec2(150, 100));
 
     guecs.state = .{

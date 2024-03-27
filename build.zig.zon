@@ -4,9 +4,8 @@
     .version = "0.1.0",
     .dependencies = .{
         .mach = .{
-            .url = "https://pkg.machengine.org/mach/d48690fdca7e7d185536ca60a4000b5b06604048.tar.gz",
-            .hash = "1220a5f8b65fb7e0f897061e3fe51234bc615eaa719d607d2921f037c58a0ea7a5b1",
-            // .hash = "1220460f5e1d1f18cb7734e48e7f1d1bff2bd154b9c7d86ff667e80b05be8951143c",
+            .url = "https://pkg.machengine.org/mach/279290bbf2f1adab0af00323280a07d6bfff47a5.tar.gz",
+            .hash = "1220ba5472217ef81455b19d540967049bbfaf768b30d04534865707e907ee1c4aec",
         },
     },
 }

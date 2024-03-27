@@ -9,6 +9,10 @@ const vec3 = math.vec3;
 const Mat4x4 = math.Mat4x4;
 
 pub const name = .guecs;
+pub const Mod = mach.Mod(@This());
+
+const Gui = @import("Gui.zig");
+const Input = @import("Input.zig");
 
 const Self = @This();
 
@@ -19,46 +23,47 @@ pub const Pipeline = enum(u32) {
 };
 
 pub fn init(
-    engine: *mach.Mod(.engine),
-    guecs: *mach.Mod(.guecs),
-    gui_mod: *mach.Mod(.gui),
+    engine: *mach.Engine.Mod,
+    guecs: *Mod,
+    gui_mod: *Gui.Mod,
+    input_mod: *Input.Mod,
 ) !void {
     core.setTitle("Guecs");
 
+    try input_mod.send(.init, .{});
     try gui_mod.send(.init, .{});
 
     const rect = try engine.newEntity();
     try gui_mod.set(rect, .transform, Mat4x4.translate(vec3(100, 100, 0)));
     try gui_mod.set(rect, .size, vec2(150, 100));
+    try gui_mod.set(rect, .clickable, {});
+    try gui_mod.set(rect, .visible, {});
 
     guecs.state = .{
         .rect = rect,
     };
 }
 
-pub fn deinit(engine: *mach.Mod(.engine)) !void {
+pub fn deinit(engine: *mach.Engine.Mod) !void {
     _ = engine;
 }
 
 pub fn tick(
-    engine: *mach.Mod(.engine),
-    _: *mach.Mod(.guecs),
-    gui_mod: *mach.Mod(.gui),
+    engine: *mach.Engine.Mod,
+    _: *Mod,
+    input_mod: *Input.Mod,
+    gui_mod: *Gui.Mod,
 ) !void {
-    // TODO(engine): event polling should emit ECS events.
-    var iter = core.pollEvents();
-    while (iter.next()) |event| {
-        switch (event) {
-            .key_press => |ev| {
-                switch (ev.key) {
-                    .escape => try engine.send(.exit, .{}),
-                    else => {},
-                }
-            },
-            .close => try engine.send(.exit, .{}),
-            else => {},
-        }
-    }
+    try input_mod.send(.poll, .{});
+
+    // Check if we need to close first.
+    // For real application, should probably utilize an input -> actions abstraction, so Close and ESC could trigger -> Close Action
+    var archetypes_iter = engine.entities.query(.{ .all = &.{
+        .{ .input = &.{.close} },
+    } });
+    if (archetypes_iter.next() != null) try engine.send(.exit, .{});
+
+    //try gui_mod.send(.handleInput, .{});
 
     // Render a frame
     try gui_mod.send(.preRender, .{});

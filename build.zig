@@ -17,7 +17,6 @@ pub fn build(b: *std.Build) !void {
         .target = target,
         .optimize = optimize,
         .mach_builder = mach_dep.builder,
-        .deps = &[_]std.build.ModuleDependency{},
     });
     if (b.args) |args| app.run.addArgs(args);
 

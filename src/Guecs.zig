@@ -63,7 +63,7 @@ pub fn tick(
     } });
     if (archetypes_iter.next() != null) try engine.send(.exit, .{});
 
-    //try gui_mod.send(.handleInput, .{});
+    try gui_mod.send(.handleInput, .{});
 
     // Render a frame
     try gui_mod.send(.preRender, .{});

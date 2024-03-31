@@ -152,11 +152,12 @@ pub const local = struct {
         // Update uniform buffer
         // Set 0,0 to top-left
 
+        const window_size = mach.core.size();
         const proj = Mat4x4.projection2D(.{
-            .left = -@as(f32, @floatFromInt(core.size().width)) / 2,
-            .right = @as(f32, @floatFromInt(core.size().width)) / 2,
-            .bottom = -@as(f32, @floatFromInt(core.size().height)) / 2,
-            .top = @as(f32, @floatFromInt(core.size().height)) / 2,
+            .left = 0,
+            .right = @floatFromInt(window_size.width),
+            .bottom = @floatFromInt(window_size.height),
+            .top = 0,
             .near = -0.1,
             .far = 100000,
         });

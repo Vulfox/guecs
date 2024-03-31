@@ -29,13 +29,13 @@ pub const local = struct {
         //std.log.warn("inputpoll", .{});
         // Clear previous input events
         var archetypes_iter = engine.entities.query(.{
-            .all = &.{
-                .{ .input = &.{} },
+            .any = &.{
+                .{ .input = &.{ .mouse_press, .mouse_release, .mouse_scroll } },
             },
         });
         while (archetypes_iter.next()) |archetype| {
             const ids = archetype.slice(.entity, .id);
-            std.log.warn("IDs: {any}", .{ids});
+            // std.log.warn("IDs: {any}", .{ids});
 
             for (ids) |id| {
                 try engine.entities.remove(id);
@@ -57,25 +57,27 @@ pub const local = struct {
                 // },
                 .mouse_press => |ev| {
                     const new_event = try engine.newEntity();
+                    // std.log.warn("mouse_press: {any}", .{new_event});
                     try input_mod.set(new_event, .mouse_press, ev);
                 },
                 .mouse_release => |ev| {
                     const new_event = try engine.newEntity();
-                    std.log.warn("mouse_release: {any}", .{new_event});
+                    // std.log.warn("mouse_release: {any}", .{new_event});
                     try input_mod.set(new_event, .mouse_release, ev);
                 },
                 .mouse_scroll => |ev| {
                     const new_event = try engine.newEntity();
+                    // std.log.warn("mouse_scroll: {any}", .{new_event});
                     try input_mod.set(new_event, .mouse_scroll, ev);
                 },
-                .focus_gained => {
-                    const new_event = try engine.newEntity();
-                    try input_mod.set(new_event, .focus_gained, {});
-                },
-                .focus_lost => {
-                    const new_event = try engine.newEntity();
-                    try input_mod.set(new_event, .focus_lost, {});
-                },
+                // .focus_gained => {
+                //     const new_event = try engine.newEntity();
+                //     try input_mod.set(new_event, .focus_gained, {});
+                // },
+                // .focus_lost => {
+                //     const new_event = try engine.newEntity();
+                //     try input_mod.set(new_event, .focus_lost, {});
+                // },
                 .close => {
                     const new_event = try engine.newEntity();
                     // std.log.warn("input_mod: {any}", .{input_mod.entities.archetypes});
